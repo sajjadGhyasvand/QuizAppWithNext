@@ -10,8 +10,6 @@ export default function Page() {
     const [checked, setChecked] = useState(false);
     const [selectedAnswerIndex, setSelectedAnswerIndex] = useState(null);
     const [showResult, setShowResult] = useState(false);
-    const [answers, setAnswers] = useState([]);
-    const [correctAnswer, setCorrectAnswer] = useState("");
     const [result, setResult] = useState({
         score: 0,
         correctAnswers: 0,
@@ -19,26 +17,7 @@ export default function Page() {
     });
 
     const { questions } = quiz;
-
-    useEffect(() => {
-        getData();
-    }, [result]);
-
-    function getData() {
-        setAnswers(questions[activeQuestion].answers);
-        setCorrectAnswer(questions[activeQuestion].correctAnswer);
-    }
-
-    async function timeDelay() {
-        const delay = 1 + Math.floor(Math.random() * 5);
-        console.log(`Delay: ${delay}`);
-
-        await timeout(delay * 1000);
-    }
-
-    function timeout(delay) {
-        return new Promise((time) => setTimeout(time, delay));
-    }
+    const { answers, correctAnswer } = questions[activeQuestion];
 
     // Select And Check
     const onAnswerSelected = (answer, index) => {
@@ -69,8 +48,6 @@ export default function Page() {
 
         if (activeQuestion !== questions.length - 1) {
             setActiveQuestion((prev) => prev + 1);
-            setCorrectAnswer("");
-            setAnswers([]);
         } else {
             setActiveQuestion(0);
             setShowResult(true);
@@ -78,6 +55,8 @@ export default function Page() {
 
         setChecked(false);
     };
+
+    // throw new Error();
 
     return (
         <div className="container">
@@ -105,9 +84,7 @@ export default function Page() {
                                 }
                             >
                                 <Suspense fallback={<Loading count={1} />}>
-                                    <span>
-                                        {timeDelay().then(() => answer)}
-                                    </span>
+                                    <span>{answer}</span>
                                 </Suspense>
                             </li>
                         ))}
